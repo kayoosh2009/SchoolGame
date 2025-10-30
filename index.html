@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>משפטים - משחק הצדק</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      direction: rtl;
+    }
+
+    #game {
+      position: relative;
+      width: 800px;
+      height: 600px;
+    }
+
+    #scene {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: opacity 0.5s ease;
+    }
+
+    #ui {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.7);
+      padding: 20px;
+      box-sizing: border-box;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    #text {
+      margin-bottom: 15px;
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    .choice {
+      display: block;
+      background: #333;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .choice:hover {
+      background: #555;
+      transform: scale(1.02);
+    }
+
+    .correct {
+      background: #2e7d32 !important;
+    }
+
+    .wrong {
+      background: #c62828 !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <img id="scene" src="img/start.png" alt="תמונה">
+    <div id="ui">
+      <div id="text"></div>
+      <div id="choices"></div>
+    </div>
+  </div>
+
+  <script>
+    const scene = document.getElementById('scene');
+    const textBox = document.getElementById('text');
+    const choicesBox = document.getElementById('choices');
+
+    let gameStarted = false;
+    let currentQuestion = 0;
+    let score = 0;
+    let locked = false;
+
+    const questions = [
+      {
+        image: '1.png',
+        text: 'אדם לקח שור של חברו בלי רשות והשור נפגע. מה עליו לעשות?',
+        choices: [
+          { text: 'להחזיר את השור ולשלם על הנזק', correct: true },
+          { text: 'להתנצל וזהו', correct: false },
+          { text: 'ללכת לשופט ולבקש סליחה', correct: false }
+        ]
+      },
+      {
+        image: '2.png',
+        text: 'שני אנשים רבים על גלימה. מה עושים?',
+        choices: [
+          { text: 'מחלקים את הגלימה ושניהם נשבעים', correct: true },
+          { text: 'נותנים אותה למי שצועק חזק יותר', correct: false },
+          { text: 'מוכרים את הגלימה וקונים חדשה', correct: false }
+        ]
+      },
+      {
+        image: '3.png',
+        text: 'פועל שבר בטעות כלי עבודה של האדון. מה הדין?',
+        choices: [
+          { text: 'הוא צריך לשלם על הנזק', correct: true },
+          { text: 'הוא רק מתנצל וממשיך לעבוד', correct: false },
+          { text: 'האדון סולח וזהו', correct: false }
+        ]
+      },
+      {
+        image: '4.png',
+        text: 'שכן חפר בור ולא כיסה אותו, וחמור נפל פנימה. מה קובע החוק?',
+        choices: [
+          { text: 'בעל הבור משלם על הנזק', correct: true },
+          { text: 'זה באשמת בעל החמור', correct: false },
+          { text: 'מחלקים את ההפסד חצי חצי', correct: false }
+        ]
+      },
+      {
+        image: '5.png',
+        text: 'אדם פגע בחברו וגרם לו כאב ונזק. מה עליו לעשות?',
+        choices: [
+          { text: 'לשלם על הריפוי והזמן שאיבד', correct: true },
+          { text: 'להתנצל לפניו', correct: false },
+          { text: 'לברוח לעיר אחרת', correct: false }
+        ]
+      },
+      {
+        image: '6.png',
+        text: 'מישהו גנב כבשה ומכר אותה. מה העונש?',
+        choices: [
+          { text: 'לשלם פי ארבעה', correct: true },
+          { text: 'להחזיר כבשה אחת בלבד', correct: false },
+          { text: 'לעבוד אצל הנגנב', correct: false }
+        ]
+      },
+      {
+        image: '7.png',
+        text: 'אדם ראה שחמור של אויבו נפל תחת משאו. מה עליו לעשות?',
+        choices: [
+          { text: 'לעזור לו להרים את החמור', correct: true },
+          { text: 'להתעלם וללכת', correct: false },
+          { text: 'לדווח לשלטונות', correct: false }
+        ]
+      },
+      {
+        image: '8.png',
+        text: 'אדם הרג מישהו בשגגה. מה עליו לעשות?',
+        choices: [
+          { text: 'לברוח לעיר מקלט', correct: true },
+          { text: 'לשלם פיצוי למשפחה', correct: false },
+          { text: 'להישפט מיד', correct: false }
+        ]
+      },
+      {
+        image: '9.png',
+        text: 'שופט קיבל שוחד כדי להצדיק את הרשע. מה אומר החוק?',
+        choices: [
+          { text: 'אסור לקחת שוחד – זה מעוור את העיניים', correct: true },
+          { text: 'מותר אם זה למען חבר', correct: false },
+          { text: 'מותר אם אף אחד לא יודע', correct: false }
+        ]
+      },
+      {
+        image: '10.png',
+        text: 'עד ראה משהו רע אבל שותק. מה עליו לעשות?',
+        choices: [
+          { text: 'להגיד את האמת', correct: true },
+          { text: 'לשתוק כדי לא להסתבך', correct: false },
+          { text: 'להמציא סיפור אחר', correct: false }
+        ]
+      }
+    ];
+
+    // ערבוב מערך
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function showStartScreen() {
+      scene.src = 'img/start.png';
+      textBox.innerHTML = 'לחץ על <b>רווח</b> כדי להתחיל את המשפט.';
+      choicesBox.innerHTML = '';
+    }
+
+    function showQuestion() {
+      locked = false;
+      const q = questions[currentQuestion];
+      scene.style.opacity = 0;
+      setTimeout(() => {
+        scene.src = `img/${q.image}`;
+        scene.style.opacity = 1;
+      }, 200);
+
+      textBox.textContent = q.text;
+      choicesBox.innerHTML = '';
+
+      const shuffledChoices = shuffle([...q.choices]);
+
+      shuffledChoices.forEach(choice => {
+        const btn = document.createElement('div');
+        btn.classList.add('choice');
+        btn.textContent = choice.text;
+        btn.onclick = () => chooseAnswer(btn, choice.correct);
+        choicesBox.appendChild(btn);
+      });
+    }
+
+    function chooseAnswer(btn, isCorrect) {
+      if (locked) return;
+      locked = true;
+
+      const buttons = document.querySelectorAll('.choice');
+      buttons.forEach(b => b.style.pointerEvents = 'none');
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        score++;
+      } else {
+        btn.classList.add('wrong');
+        const correctBtn = Array.from(buttons).find(b => {
+          return questions[currentQuestion].choices.find(c => c.text === b.textContent && c.correct);
+        });
+        if (correctBtn) correctBtn.classList.add('correct');
+      }
+
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+          showQuestion();
+        } else {
+          showEndScreen();
+        }
+      }, 900);
+    }
+
+    function showEndScreen() {
+      scene.src = 'img/end.png';
+      textBox.innerHTML = `המשפט נגמר!<br>צדקת ב-${score} מתוך ${questions.length}.`;
+      choicesBox.innerHTML = '<div class="choice" onclick="restart()">שחק שוב</div>';
+    }
+
+    function restart() {
+      score = 0;
+      currentQuestion = 0;
+      gameStarted = false;
+      showStartScreen();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        if (!gameStarted) {
+          gameStarted = true;
+          showQuestion();
+        }
+      }
+    });
+
+    showStartScreen();
+  </script>
+</body>
+</html>
