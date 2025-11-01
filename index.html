@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>משפטים - משחק הצדק</title>
+  <title>Суд по Мишпатим</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #111;
       color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      direction: rtl;
     }
 
     #game {
@@ -45,8 +44,8 @@
 
     #text {
       margin-bottom: 15px;
-      font-size: 20px;
-      line-height: 1.5;
+      font-size: 18px;
+      line-height: 1.4;
     }
 
     .choice {
@@ -75,7 +74,7 @@
 </head>
 <body>
   <div id="game">
-    <img id="scene" src="img/start.png" alt="תמונה">
+    <img id="scene" src="img/start.png" alt="Сцена">
     <div id="ui">
       <div id="text"></div>
       <div id="choices"></div>
@@ -95,98 +94,98 @@
     const questions = [
       {
         image: '1.png',
-        text: 'אדם לקח שור של חברו בלי רשות והשור נפגע. מה עליו לעשות?',
+        text: 'בין אדם לכך פר של שכנו בךי רשות, והפר נפצע',
         choices: [
-          { text: 'להחזיר את השור ולשלם על הנזק', correct: true },
-          { text: 'להתנצל וזהו', correct: false },
-          { text: 'ללכת לשופט ולבקש סליחה', correct: false }
+          { text: 'להחזיר את הפר ולהחזיר פיצוי', correct: true },
+          { text: 'להושיב את הבין אדם בכלא', correct: false },
+          { text: 'שהבין אדם יתנצל מול שכנן', correct: false }
         ]
       },
       {
         image: '2.png',
-        text: 'שני אנשים רבים על גלימה. מה עושים?',
+        text: 'שני אחים רבים של מי היהיה הגלימה',
         choices: [
-          { text: 'מחלקים את הגלימה ושניהם נשבעים', correct: true },
-          { text: 'נותנים אותה למי שצועק חזק יותר', correct: false },
-          { text: 'מוכרים את הגלימה וקונים חדשה', correct: false }
+          { text: 'לחלוק את אגלימה בין האחים', correct: true },
+          { text: 'לתת את הגלימה למי שצואק הכי חזק', correct: false },
+          { text: 'למחור את הגלימה ולקנות 2 חדשים', correct: true }
         ]
       },
       {
         image: '3.png',
-        text: 'פועל שבר בטעות כלי עבודה של האדון. מה הדין?',
+        text: 'עובד בית בטעות שבר אגרטל בבית שבו עובד',
         choices: [
-          { text: 'הוא צריך לשלם על הנזק', correct: true },
-          { text: 'הוא רק מתנצל וממשיך לעבוד', correct: false },
-          { text: 'האדון סולח וזהו', correct: false }
+          { text: 'לשלם על האגרטל השבור', correct: true },
+          { text: 'לבקש סליחה וללכת', correct: false },
+          { text: 'לברוח ולהגיד שזה עשה חתול בית', correct: false }
         ]
       },
       {
         image: '4.png',
-        text: 'שכן חפר בור ולא כיסה אותו, וחמור נפל פנימה. מה קובע החוק?',
+        text: 'Сосед вырыл яму и не оградил её, в неё упал осёл. Что делать?',
         choices: [
-          { text: 'בעל הבור משלם על הנזק', correct: true },
-          { text: 'זה באשמת בעל החמור', correct: false },
-          { text: 'מחלקים את ההפסד חצי חצי', correct: false }
+          { text: 'Владелец ямы должен заплатить', correct: true },
+          { text: 'Пострадавший сам виноват', correct: false },
+          { text: 'Продать осла и разделить деньги', correct: false }
         ]
       },
       {
         image: '5.png',
-        text: 'אדם פגע בחברו וגרם לו כאב ונזק. מה עליו לעשות?',
+        text: 'Кто-то ударил ближнего и причинил вред. Что говорит закон?',
         choices: [
-          { text: 'לשלם על הריפוי והזמן שאיבד', correct: true },
-          { text: 'להתנצל לפניו', correct: false },
-          { text: 'לברוח לעיר אחרת', correct: false }
+          { text: 'Заплатить за лечение и простой', correct: true },
+          { text: 'Попросить прощения', correct: false },
+          { text: 'Посадить в тюрьму', correct: false }
         ]
       },
       {
         image: '6.png',
-        text: 'מישהו גנב כבשה ומכר אותה. מה העונש?',
+        text: 'Человек украл овцу и продал её. Что делать?',
         choices: [
-          { text: 'לשלם פי ארבעה', correct: true },
-          { text: 'להחזיר כבשה אחת בלבד', correct: false },
-          { text: 'לעבוד אצל הנגנב', correct: false }
+          { text: 'Возместить вчетверо', correct: true },
+          { text: 'Вернуть одну овцу', correct: false },
+          { text: 'Попросить прощения', correct: false }
         ]
       },
       {
         image: '7.png',
-        text: 'אדם ראה שחמור של אויבו נפל תחת משאו. מה עליו לעשות?',
+        text: 'Один человек спас осла врага, который упал под ношей. Правильно ли он поступил?',
         choices: [
-          { text: 'לעזור לו להרים את החמור', correct: true },
-          { text: 'להתעלם וללכת', correct: false },
-          { text: 'לדווח לשלטונות', correct: false }
+          { text: 'Да, так велит закон — помоги даже врагу', correct: true },
+          { text: 'Нет, пусть враг сам разбирается', correct: false },
+          { text: 'Нужно позвать стражу', correct: false }
         ]
       },
       {
         image: '8.png',
-        text: 'אדם הרג מישהו בשגגה. מה עליו לעשות?',
+        text: 'Человек случайно убил другого. Что ему делать?',
         choices: [
-          { text: 'לברוח לעיר מקלט', correct: true },
-          { text: 'לשלם פיצוי למשפחה', correct: false },
-          { text: 'להישפט מיד', correct: false }
+          { text: 'Убежать в город-убежище', correct: true },
+          { text: 'Заплатить штраф', correct: false },
+          { text: 'Сдаться врагам убитого', correct: false }
         ]
       },
       {
         image: '9.png',
-        text: 'שופט קיבל שוחד כדי להצדיק את הרשע. מה אומר החוק?',
+        text: 'Кто-то принял взятку, чтобы оправдать виновного. Что говорит закон?',
         choices: [
-          { text: 'אסור לקחת שוחד – זה מעוור את העיניים', correct: true },
-          { text: 'מותר אם זה למען חבר', correct: false },
-          { text: 'מותר אם אף אחד לא יודע', correct: false }
+          { text: 'Взятка запрещена', correct: true },
+          { text: 'Можно, если ради друга', correct: false },
+          { text: 'Главное — не попасться', correct: false }
         ]
       },
       {
         image: '10.png',
-        text: 'עד ראה משהו רע אבל שותק. מה עליו לעשות?',
+        text: 'Свидетель видел преступление, но молчит. Как поступить?',
         choices: [
-          { text: 'להגיד את האמת', correct: true },
-          { text: 'לשתוק כדי לא להסתבך', correct: false },
-          { text: 'להמציא סיפור אחר', correct: false }
+          { text: 'Должен сказать правду', correct: true },
+          { text: 'Может промолчать', correct: false },
+          { text: 'Можно солгать ради мира', correct: false }
         ]
       }
     ];
 
-    // ערבוב מערך
     function shuffle(array) {
+      // Перемешивание массива Фишера–Йетса
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
@@ -196,7 +195,7 @@
 
     function showStartScreen() {
       scene.src = 'img/start.png';
-      textBox.innerHTML = 'לחץ על <b>רווח</b> כדי להתחיל את המשפט.';
+      textBox.innerHTML = 'Нажми <b>Пробел</b>, чтобы начать суд.';
       choicesBox.innerHTML = '';
     }
 
@@ -212,6 +211,7 @@
       textBox.textContent = q.text;
       choicesBox.innerHTML = '';
 
+      // Перемешиваем варианты ответов перед показом
       const shuffledChoices = shuffle([...q.choices]);
 
       shuffledChoices.forEach(choice => {
@@ -235,6 +235,7 @@
         score++;
       } else {
         btn.classList.add('wrong');
+        // показать правильный ответ
         const correctBtn = Array.from(buttons).find(b => {
           return questions[currentQuestion].choices.find(c => c.text === b.textContent && c.correct);
         });
@@ -253,8 +254,8 @@
 
     function showEndScreen() {
       scene.src = 'img/end.png';
-      textBox.innerHTML = `המשפט נגמר!<br>צדקת ב-${score} מתוך ${questions.length}.`;
-      choicesBox.innerHTML = '<div class="choice" onclick="restart()">שחק שוב</div>';
+      textBox.innerHTML = `Суд окончен!<br>Твой результат: ${score} из ${questions.length}`;
+      choicesBox.innerHTML = '<div class="choice" onclick="restart()">Играть снова</div>';
     }
 
     function restart() {
